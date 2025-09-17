@@ -119,47 +119,75 @@
             flex-direction: column;
             justify-content: center;
             align-items: center;
-            background-size: contain;
-            background-position: center;
-            background-repeat: no-repeat;
-            background-color: #74b9ff;
             overflow: hidden;
         }
 
-        /* Use high quality images without forced dimensions - let them auto-fit */
+        /* Alternative sizing options - you can test which works best */
+        .test-container-1.size-cover {
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+        }
+
+        .test-container-1.size-contain {
+            background-size: contain;
+            background-position: center;
+            background-repeat: no-repeat;
+        }
+
+        .test-container-1.size-100 {
+            background-size: 100% 100%;
+            background-position: center;
+            background-repeat: no-repeat;
+        }
+
+        .test-container-1.size-auto {
+            background-size: auto;
+            background-position: center;
+            background-repeat: no-repeat;
+        }
+
+        /* Default to cover for now */
+        .test-container-1 {
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+        }
+
+        /* Simpler image URLs without forced sizing */
         .test-container-1.weather-sunny {
             background: linear-gradient(rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.3)), 
-                        url('https://images.unsplash.com/photo-1506905925346-21bda4d32df4?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80');
+                        url('https://images.unsplash.com/photo-1506905925346-21bda4d32df4?auto=format&fit=crop&q=80');
             background-color: #87CEEB;
         }
 
         .test-container-1.weather-rainy {
             background: linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4)), 
-                        url('https://images.unsplash.com/photo-1514897575457-c4db467cf78e?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80');
+                        url('https://images.unsplash.com/photo-1514897575457-c4db467cf78e?auto=format&fit=crop&q=80');
             background-color: #2C3E50;
         }
 
         .test-container-1.weather-cloudy {
             background: linear-gradient(rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.3)), 
-                        url('https://images.unsplash.com/photo-1501594907352-04cda38ebc29?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80');
+                        url('https://images.unsplash.com/photo-1501594907352-04cda38ebc29?auto=format&fit=crop&q=80');
             background-color: #95A5A6;
         }
 
         .test-container-1.weather-snowy {
             background: linear-gradient(rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.2)), 
-                        url('https://images.unsplash.com/photo-1547036967-23d11aacaee0?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80');
+                        url('https://images.unsplash.com/photo-1547036967-23d11aacaee0?auto=format&fit=crop&q=80');
             background-color: #E8F4FD;
         }
 
         .test-container-1.weather-stormy {
             background: linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4)), 
-                        url('https://images.unsplash.com/photo-1605727216801-e27ce1d0cc28?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80');
+                        url('https://images.unsplash.com/photo-1605727216801-e27ce1d0cc28?auto=format&fit=crop&q=80');
             background-color: #2C3E50;
         }
 
         .test-container-1.weather-foggy {
             background: linear-gradient(rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.3)), 
-                        url('https://images.unsplash.com/photo-1487621167305-5d248087c724?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80');
+                        url('https://images.unsplash.com/photo-1487621167305-5d248087c724?auto=format&fit=crop&q=80');
             background-color: #BDC3C7;
         }
 
@@ -511,6 +539,12 @@
                 <button class="test-btn" onclick="testWeatherBackground('stormy')">⛈️ Stormy</button>
                 <button class="test-btn" onclick="testWeatherBackground('foggy')">🌫️ Foggy</button>
             </div>
+            <h3 style="font-size: 0.9em; margin-top: 10px;">📏 Try Different Image Fitting:</h3>
+            <div class="test-buttons">
+                <button class="test-btn" onclick="changeImageSize('cover')">Cover (Fill)</button>
+                <button class="test-btn" onclick="changeImageSize('contain')">Contain (Fit)</button>
+                <button class="test-btn" onclick="changeImageSize('100')">Stretch (100%)</button>
+            </div>
             <button class="test-btn" onclick="getWeatherData()" style="width: 100%; margin-top: 5px;">🔄 Reset to Real Weather</button>
         </div>
         
@@ -607,6 +641,27 @@
                 document.getElementById('conditions').textContent = `Testing ${weatherType.charAt(0).toUpperCase() + weatherType.slice(1)} Background`;
                 document.getElementById('weather-icon').textContent = getTestIcon(weatherType);
             }
+        }
+
+        // TEST FUNCTION FOR IMAGE SIZING
+        function changeImageSize(sizeMode) {
+            const container = document.querySelector('.test-container-1');
+            
+            // Remove existing size classes
+            container.classList.remove('size-cover', 'size-contain', 'size-100', 'size-auto');
+            
+            // Apply the selected size mode
+            if (sizeMode === 'cover') {
+                container.style.backgroundSize = 'cover';
+            } else if (sizeMode === 'contain') {
+                container.style.backgroundSize = 'contain';
+            } else if (sizeMode === '100') {
+                container.style.backgroundSize = '100% 100%';
+            } else if (sizeMode === 'auto') {
+                container.style.backgroundSize = 'auto';
+            }
+            
+            console.log(`Changed background-size to: ${container.style.backgroundSize}`);
         }
 
         function getTestIcon(weatherType) {
