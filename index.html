@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gene's Weather Report</title>
+    <title>Gene's Weather Report - Test Mode</title>
     <style>
         * {
             margin: 0;
@@ -50,6 +50,45 @@
             color: #636e72;
             margin-bottom: 20px;
             font-size: 0.9em;
+        }
+
+        /* TEST BUTTONS SECTION */
+        .test-controls {
+            background: rgba(255, 193, 7, 0.1);
+            border: 2px solid #ffc107;
+            border-radius: 10px;
+            padding: 15px;
+            margin: 15px 0;
+        }
+
+        .test-controls h3 {
+            color: #e17055;
+            margin-bottom: 10px;
+            font-size: 1em;
+        }
+
+        .test-buttons {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 8px;
+            margin-bottom: 10px;
+        }
+
+        .test-btn {
+            background: #6c5ce7;
+            color: white;
+            border: none;
+            padding: 8px 12px;
+            border-radius: 15px;
+            cursor: pointer;
+            font-size: 0.8em;
+            font-weight: bold;
+            transition: all 0.3s ease;
+        }
+
+        .test-btn:hover {
+            background: #5f3dc4;
+            transform: translateY(-1px);
         }
 
         .test-container-1 {
@@ -435,6 +474,20 @@
             <h1 class="title">Gene's Weather Report</h1>
             <p class="subtitle">Your personal weather forecast</p>
         </div>
+
+        <!-- TEST CONTROLS SECTION -->
+        <div class="test-controls">
+            <h3>🧪 Background Test Mode</h3>
+            <div class="test-buttons">
+                <button class="test-btn" onclick="testWeatherBackground('sunny')">☀️ Sunny</button>
+                <button class="test-btn" onclick="testWeatherBackground('rainy')">🌧️ Rainy</button>
+                <button class="test-btn" onclick="testWeatherBackground('cloudy')">☁️ Cloudy</button>
+                <button class="test-btn" onclick="testWeatherBackground('snowy')">❄️ Snowy</button>
+                <button class="test-btn" onclick="testWeatherBackground('stormy')">⛈️ Stormy</button>
+                <button class="test-btn" onclick="testWeatherBackground('foggy')">🌫️ Foggy</button>
+            </div>
+            <button class="test-btn" onclick="getWeatherData()" style="width: 100%; margin-top: 5px;">🔄 Reset to Real Weather</button>
+        </div>
         
         <div class="test-container-1">
             <div id="loading" class="loading">
@@ -513,6 +566,35 @@
             'fog': '🌫️', 'foggy': '🌫️', 'mist': '🌫️', 'haze': '🌫️',
             'smoke': '🌫️', 'dust': '🌫️', 'windy': '💨', 'breezy': '🍃'
         };
+
+        // TEST FUNCTION FOR BACKGROUNDS
+        function testWeatherBackground(weatherType) {
+            const container = document.querySelector('.test-container-1');
+            
+            // Remove all weather classes
+            container.classList.remove('weather-sunny', 'weather-rainy', 'weather-cloudy', 'weather-snowy', 'weather-stormy', 'weather-foggy');
+            
+            // Add the test weather class
+            container.classList.add(`weather-${weatherType}`);
+            
+            // Update the display text to show we're testing
+            if (document.getElementById('weather-info').classList.contains('show')) {
+                document.getElementById('conditions').textContent = `Testing ${weatherType.charAt(0).toUpperCase() + weatherType.slice(1)} Background`;
+                document.getElementById('weather-icon').textContent = getTestIcon(weatherType);
+            }
+        }
+
+        function getTestIcon(weatherType) {
+            const testIcons = {
+                'sunny': '☀️',
+                'rainy': '🌧️', 
+                'cloudy': '☁️',
+                'snowy': '❄️',
+                'stormy': '⛈️',
+                'foggy': '🌫️'
+            };
+            return testIcons[weatherType] || '🌤️';
+        }
 
         function getWeatherIcon(forecast) {
             const description = forecast.toLowerCase();
@@ -680,107 +762,3 @@
         function setWeatherBackground(conditions) {
             const container = document.querySelector('.test-container-1');
             const desc = conditions.toLowerCase();
-            
-            // Remove all weather classes
-            container.classList.remove('weather-sunny', 'weather-rainy', 'weather-cloudy', 'weather-snowy', 'weather-stormy', 'weather-foggy');
-            
-            // Add appropriate weather class based on conditions
-            if (desc.includes('rain') || desc.includes('shower') || desc.includes('drizzle')) {
-                container.classList.add('weather-rainy');
-            } else if (desc.includes('storm') || desc.includes('thunder')) {
-                container.classList.add('weather-stormy');
-            } else if (desc.includes('snow') || desc.includes('blizzard') || desc.includes('flurr')) {
-                container.classList.add('weather-snowy');
-            } else if (desc.includes('fog') || desc.includes('mist') || desc.includes('haze')) {
-                container.classList.add('weather-foggy');
-            } else if (desc.includes('sun') || desc.includes('clear') || desc.includes('fair')) {
-                container.classList.add('weather-sunny');
-            } else if (desc.includes('cloud') || desc.includes('overcast')) {
-                container.classList.add('weather-cloudy');
-            } else {
-                // Default to cloudy
-                container.classList.add('weather-cloudy');
-            }
-        }
-
-        async function displayWeatherData(pointsData, forecastData, lat, lon) {
-            const currentPeriod = forecastData.properties.periods[0];
-            const relativeLocation = pointsData.properties.relativeLocation?.properties;
-            
-            let locationName = 'Your Location';
-            if (relativeLocation && relativeLocation.city && relativeLocation.state) {
-                locationName = `${relativeLocation.city}, ${relativeLocation.state}`;
-            } else if (relativeLocation && relativeLocation.city) {
-                locationName = `${relativeLocation.city}, US`;
-            }
-            
-            const weatherIcon = getWeatherIcon(currentPeriod.shortForecast);
-            const precipChance = extractPrecipitationChance(currentPeriod.detailedForecast);
-            
-            // Set weather background with real photos
-            setWeatherBackground(currentPeriod.shortForecast);
-            
-            let humidity = 'Getting...';
-            try {
-                humidity = await getHumidityFromObservations(pointsData);
-            } catch (error) {
-                humidity = 'Not available';
-            }
-            
-            document.getElementById('location').textContent = locationName;
-            document.getElementById('weather-icon').textContent = weatherIcon;
-            document.getElementById('temperature').textContent = `${currentPeriod.temperature}°${currentPeriod.temperatureUnit}`;
-            document.getElementById('conditions').textContent = currentPeriod.shortForecast;
-            document.getElementById('temp-unit').textContent = `${currentPeriod.temperature}°${currentPeriod.temperatureUnit}`;
-            document.getElementById('wind').textContent = currentPeriod.windSpeed + ' ' + currentPeriod.windDirection;
-            document.getElementById('humidity').textContent = humidity;
-            document.getElementById('precipitation').textContent = precipChance;
-            document.getElementById('coordinates').textContent = `${lat.toFixed(4)}, ${lon.toFixed(4)}`;
-            document.getElementById('detailed-forecast-text').textContent = currentPeriod.detailedForecast;
-            
-            displaySevenDayForecast(forecastData.properties.periods);
-            
-            document.getElementById('loading').style.display = 'none';
-            document.getElementById('error').style.display = 'none';
-            document.getElementById('weather-info').classList.add('show');
-        }
-
-        function showError(message) {
-            document.getElementById('loading').style.display = 'none';
-            document.getElementById('weather-info').classList.remove('show');
-            document.getElementById('error').style.display = 'block';
-            document.getElementById('error').textContent = message;
-        }
-
-        async function getWeatherData() {
-            document.getElementById('loading').style.display = 'flex';
-            document.getElementById('weather-info').classList.remove('show');
-            document.getElementById('error').style.display = 'none';
-            
-            try {
-                const position = await getUserLocation();
-                const { latitude, longitude } = position.coords;
-                const pointsData = await callNWSPointsAPI(latitude, longitude);
-                const forecastData = await callNWSForecastAPI(pointsData.properties.forecast);
-                await displayWeatherData(pointsData, forecastData, latitude, longitude);
-            } catch (error) {
-                let errorMessage = 'Unable to get weather data. ';
-                if (error.code === 1) {
-                    errorMessage += 'Please allow location access and refresh the page.';
-                } else if (error.code === 2) {
-                    errorMessage += 'Location information is unavailable.';
-                } else if (error.code === 3) {
-                    errorMessage += 'Location request timed out.';
-                } else {
-                    errorMessage += error.message || 'Please check your internet connection.';
-                }
-                showError(errorMessage);
-            }
-        }
-
-        document.addEventListener('DOMContentLoaded', function() {
-            getWeatherData();
-        });
-    </script>
-</body>
-</html>
