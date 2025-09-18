@@ -568,6 +568,75 @@
                 <!-- Hourly forecast will be populated here -->
             </div>
         </div>
+
+        <!-- TEST CAROUSEL WITH RANDOM VALUES -->
+        <div class="test-container-carousel">
+            <div class="carousel-header">
+                🧪 Test Carousel (Random Values)
+            </div>
+            <div class="carousel-wrapper">
+                <div class="carousel-item">
+                    <div>2PM</div>
+                    <div>☀️</div>
+                    <div>Sunny</div>
+                    <div>75°F</div>
+                </div>
+                <div class="carousel-item">
+                    <div>3PM</div>
+                    <div>⛅</div>
+                    <div>Partly Cloudy</div>
+                    <div>73°F</div>
+                </div>
+                <div class="carousel-item">
+                    <div>4PM</div>
+                    <div>☁️</div>
+                    <div>Cloudy</div>
+                    <div>71°F</div>
+                </div>
+                <div class="carousel-item">
+                    <div>5PM</div>
+                    <div>🌦️</div>
+                    <div>Light Rain</div>
+                    <div>69°F</div>
+                </div>
+                <div class="carousel-item">
+                    <div>6PM</div>
+                    <div>🌧️</div>
+                    <div>Rain</div>
+                    <div>67°F</div>
+                </div>
+                <div class="carousel-item">
+                    <div>7PM</div>
+                    <div>⛈️</div>
+                    <div>Storms</div>
+                    <div>65°F</div>
+                </div>
+                <div class="carousel-item">
+                    <div>8PM</div>
+                    <div>🌨️</div>
+                    <div>Snow</div>
+                    <div>32°F</div>
+                </div>
+                <div class="carousel-item">
+                    <div>9PM</div>
+                    <div>🌫️</div>
+                    <div>Foggy</div>
+                    <div>45°F</div>
+                </div>
+                <div class="carousel-item">
+                    <div>10PM</div>
+                    <div>🌙</div>
+                    <div>Clear</div>
+                    <div>42°F</div>
+                </div>
+                <div class="carousel-item">
+                    <div>11PM</div>
+                    <div>⭐</div>
+                    <div>Starry</div>
+                    <div>40°F</div>
+                </div>
+            </div>
+        </div>
         
         <div class="test-container-3">
             <div class="detailed-forecast">
@@ -745,11 +814,9 @@
                 const shortDesc = period.shortForecast;
                 
                 hourlyItem.innerHTML = `
-                    <div class="hourly-time-info">
-                        <div class="hourly-time">${timeLabel}</div>
-                        <div class="hourly-icon">${weatherIcon}</div>
-                        <div class="hourly-desc">${shortDesc}</div>
-                    </div>
+                    <div class="hourly-time">${timeLabel}</div>
+                    <div class="hourly-icon">${weatherIcon}</div>
+                    <div class="hourly-desc">${shortDesc}</div>
                     <div class="hourly-temp">
                         <span class="temp-value">${temperature}°${tempUnit}</span>
                     </div>
