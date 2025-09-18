@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gene's Weather Report - Test Mode</title>
+    <title>Gene's Weather Report</title>
     <style>
         * {
             margin: 0;
@@ -52,62 +52,6 @@
             font-size: 0.9em;
         }
 
-        /* TEST BUTTONS SECTION */
-        .test-controls {
-            background: rgba(255, 193, 7, 0.1);
-            border: 2px solid #ffc107;
-            border-radius: 10px;
-            padding: 15px;
-            margin: 15px 0;
-        }
-
-        .test-controls h3 {
-            color: #e17055;
-            margin-bottom: 10px;
-            font-size: 1em;
-        }
-
-        .test-buttons {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 8px;
-            margin-bottom: 10px;
-        }
-
-        .test-btn {
-            background: #6c5ce7;
-            color: white;
-            border: none;
-            padding: 8px 12px;
-            border-radius: 15px;
-            cursor: pointer;
-            font-size: 0.8em;
-            font-weight: bold;
-            transition: all 0.3s ease;
-        }
-
-        .test-btn:hover {
-            background: #5f3dc4;
-            transform: translateY(-1px);
-        }
-
-        .test-container-1 {
-            border-radius: 10px;
-            padding: 15px;
-            margin: 10px 0;
-            position: relative;
-            color: white;
-            min-height: 150px;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            background-size: contain;
-            background-position: center;
-            background-repeat: no-repeat;
-            overflow: hidden;
-        }
-
         .test-container-1 {
             border-radius: 10px;
             padding: 15px;
@@ -125,10 +69,10 @@
             overflow: hidden;
         }
 
-        /* Better weather-specific images with proper cover sizing */
+        /* Weather backgrounds */
         .test-container-1.weather-sunny {
-            background: linear-gradient(rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.2)), 
-                        url('https://images.unsplash.com/photo-1506905925346-21bda4d32df4?auto=format&fit=crop&q=80');
+            background: linear-gradient(rgba(0, 0, 0, 0.15), rgba(0, 0, 0, 0.15)), 
+                        url('https://images.unsplash.com/photo-1465146344425-f00d5f5c8f07?auto=format&fit=crop&q=80');
             background-size: cover;
             background-position: center;
             background-repeat: no-repeat;
@@ -155,11 +99,15 @@
 
         .test-container-1.weather-snowy {
             background: linear-gradient(rgba(0, 0, 0, 0.1), rgba(0, 0, 0, 0.1)), 
-                        url('https://images.unsplash.com/photo-1578662996442-48f60103fc96?auto=format&fit=crop&q=80');
+                        url('https://images.unsplash.com/photo-1517299321609-52687d1bc55a?auto=format&fit=crop&q=80');
             background-size: cover;
             background-position: center;
             background-repeat: no-repeat;
             background-color: #E8F4FD;
+        }
+
+        .test-container-1.weather-snowy::before {
+            display: none;
         }
 
         .test-container-1.weather-stormy {
@@ -180,7 +128,7 @@
             background-color: #BDC3C7;
         }
 
-        /* Weather emoji overlays for visual enhancement */
+        /* Weather emoji overlays */
         .test-container-1.weather-sunny::before {
             content: '☀️';
             position: absolute;
@@ -211,28 +159,6 @@
         @keyframes cloudFloat {
             0%, 100% { transform: translateX(0px); }
             50% { transform: translateX(10px); }
-        }
-
-        .test-container-1.weather-snowy::before {
-            content: '❄️ ❄️ ❄️ ❄️ ❄️';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            font-size: 1.2em;
-            display: flex;
-            align-items: flex-start;
-            justify-content: space-around;
-            padding-top: 5px;
-            animation: snowFall 3s linear infinite;
-            filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.5));
-        }
-
-        @keyframes snowFall {
-            0% { transform: translateY(-15px) rotate(0deg); opacity: 0; }
-            50% { opacity: 1; }
-            100% { transform: translateY(25px) rotate(360deg); opacity: 0; }
         }
 
         .test-container-1.weather-stormy::before {
@@ -277,6 +203,15 @@
         .test-container-2 {
             background: rgba(255, 255, 255, 0.95);
             border: 2px solid #ddd;
+            border-radius: 10px;
+            padding: 15px;
+            margin: 10px 0;
+            text-align: left;
+        }
+
+        .test-container-hourly {
+            background: rgba(255, 255, 255, 0.95);
+            border: 2px solid #74b9ff;
             border-radius: 10px;
             padding: 15px;
             margin: 10px 0;
@@ -400,6 +335,74 @@
             font-weight: bold;
         }
 
+        .hourly-header {
+            color: #2d3436;
+            font-size: 1.05em;
+            font-weight: 600;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .hourly-list {
+            display: grid;
+            gap: 8px;
+        }
+
+        .hourly-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 8px 0;
+            border-bottom: 1px solid rgba(116, 185, 255, 0.12);
+        }
+
+        .hourly-item:last-child {
+            border-bottom: none;
+        }
+
+        .hourly-time-info {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            flex: 1;
+        }
+
+        .hourly-time {
+            font-weight: 600;
+            color: #2d3436;
+            width: 60px;
+            font-size: 0.9em;
+            text-align: left;
+        }
+
+        .hourly-icon {
+            font-size: 1.6em;
+            width: 32px;
+            text-align: center;
+        }
+
+        .hourly-desc {
+            color: #636e72;
+            font-size: 0.85em;
+            flex: 1;
+        }
+
+        .hourly-temp {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-weight: 600;
+            min-width: 45px;
+            justify-content: flex-end;
+        }
+
+        .temp-value {
+            color: #2d3436;
+            font-size: 0.9em;
+        }
+
         .detailed-forecast h3 {
             color: #2d3436;
             margin-bottom: 8px;
@@ -516,20 +519,6 @@
             <h1 class="title">Gene's Weather Report</h1>
             <p class="subtitle">Your personal weather forecast</p>
         </div>
-
-        <!-- TEST CONTROLS SECTION -->
-        <div class="test-controls">
-            <h3>🧪 Background Test Mode</h3>
-            <div class="test-buttons">
-                <button class="test-btn" onclick="testWeatherBackground('sunny')">☀️ Sunny</button>
-                <button class="test-btn" onclick="testWeatherBackground('rainy')">🌧️ Rainy</button>
-                <button class="test-btn" onclick="testWeatherBackground('cloudy')">☁️ Cloudy</button>
-                <button class="test-btn" onclick="testWeatherBackground('snowy')">❄️ Snowy</button>
-                <button class="test-btn" onclick="testWeatherBackground('stormy')">⛈️ Stormy</button>
-                <button class="test-btn" onclick="testWeatherBackground('foggy')">🌫️ Foggy</button>
-            </div>
-            <button class="test-btn" onclick="getWeatherData()" style="width: 100%; margin-top: 5px;">🔄 Reset to Real Weather</button>
-        </div>
         
         <div class="test-container-1">
             <div id="loading" class="loading">
@@ -567,6 +556,16 @@
             <div class="detail-row">
                 <span class="detail-label">📍 Coordinates</span>
                 <span class="detail-value" id="coordinates"></span>
+            </div>
+        </div>
+
+        <!-- NEW HOURLY FORECAST LIST -->
+        <div class="test-container-hourly">
+            <div class="hourly-header">
+                ⏰ Next 10 Hours
+            </div>
+            <div class="hourly-list" id="hourly-list">
+                <!-- Hourly forecast will be populated here -->
             </div>
         </div>
         
@@ -609,35 +608,6 @@
             'smoke': '🌫️', 'dust': '🌫️', 'windy': '💨', 'breezy': '🍃'
         };
 
-        // TEST FUNCTION FOR BACKGROUNDS
-        function testWeatherBackground(weatherType) {
-            const container = document.querySelector('.test-container-1');
-            
-            // Remove all weather classes
-            container.classList.remove('weather-sunny', 'weather-rainy', 'weather-cloudy', 'weather-snowy', 'weather-stormy', 'weather-foggy');
-            
-            // Add the test weather class
-            container.classList.add(`weather-${weatherType}`);
-            
-            // Update the display text to show we're testing
-            if (document.getElementById('weather-info').classList.contains('show')) {
-                document.getElementById('conditions').textContent = `Testing ${weatherType.charAt(0).toUpperCase() + weatherType.slice(1)} Background`;
-                document.getElementById('weather-icon').textContent = getTestIcon(weatherType);
-            }
-        }
-
-        function getTestIcon(weatherType) {
-            const testIcons = {
-                'sunny': '☀️',
-                'rainy': '🌧️', 
-                'cloudy': '☁️',
-                'snowy': '❄️',
-                'stormy': '⛈️',
-                'foggy': '🌫️'
-            };
-            return testIcons[weatherType] || '🌤️';
-        }
-
         function getWeatherIcon(forecast) {
             const description = forecast.toLowerCase();
             for (const [key, icon] of Object.entries(weatherIcons)) {
@@ -677,6 +647,35 @@
             return days[date.getDay()];
         }
 
+        function formatHourlyTime(dateString) {
+            const date = new Date(dateString);
+            const now = new Date();
+            
+            if (date.toDateString() === now.toDateString()) {
+                return date.toLocaleTimeString('en-US', { 
+                    hour: 'numeric', 
+                    hour12: true 
+                });
+            } else {
+                const tomorrow = new Date(now);
+                tomorrow.setDate(tomorrow.getDate() + 1);
+                
+                if (date.toDateString() === tomorrow.toDateString()) {
+                    return 'Tom ' + date.toLocaleTimeString('en-US', { 
+                        hour: 'numeric', 
+                        hour12: true 
+                    });
+                } else {
+                    return date.toLocaleDateString('en-US', { 
+                        weekday: 'short' 
+                    }) + ' ' + date.toLocaleTimeString('en-US', { 
+                        hour: 'numeric', 
+                        hour12: true 
+                    });
+                }
+            }
+        }
+
         async function getUserLocation() {
             return new Promise((resolve, reject) => {
                 if (!navigator.geolocation) {
@@ -714,6 +713,50 @@
                 throw new Error(`Weather forecast unavailable (${response.status}). Please try again later.`);
             }
             return await response.json();
+        }
+
+        async function callNWSHourlyForecastAPI(hourlyForecastUrl) {
+            const response = await fetch(hourlyForecastUrl, {
+                headers: {
+                    'Accept': 'application/geo+json',
+                    'User-Agent': '(GenesWeatherApp, contact@example.com)'
+                }
+            });
+            if (!response.ok) {
+                throw new Error(`Hourly forecast unavailable (${response.status}). Please try again later.`);
+            }
+            return await response.json();
+        }
+
+        function displayHourlyForecast(hourlyData) {
+            const hourlyList = document.getElementById('hourly-list');
+            hourlyList.innerHTML = '';
+            
+            const hourlyPeriods = hourlyData.properties.periods.slice(0, 10);
+            
+            hourlyPeriods.forEach((period) => {
+                const hourlyItem = document.createElement('div');
+                hourlyItem.className = 'hourly-item';
+                
+                const timeLabel = formatHourlyTime(period.startTime);
+                const weatherIcon = getWeatherIcon(period.shortForecast);
+                const temperature = period.temperature;
+                const tempUnit = period.temperatureUnit;
+                const shortDesc = period.shortForecast;
+                
+                hourlyItem.innerHTML = `
+                    <div class="hourly-time-info">
+                        <div class="hourly-time">${timeLabel}</div>
+                        <div class="hourly-icon">${weatherIcon}</div>
+                        <div class="hourly-desc">${shortDesc}</div>
+                    </div>
+                    <div class="hourly-temp">
+                        <span class="temp-value">${temperature}°${tempUnit}</span>
+                    </div>
+                `;
+                
+                hourlyList.appendChild(hourlyItem);
+            });
         }
 
         async function getHumidityFromObservations(pointsData) {
@@ -805,10 +848,8 @@
             const container = document.querySelector('.test-container-1');
             const desc = conditions.toLowerCase();
             
-            // Remove all weather classes
             container.classList.remove('weather-sunny', 'weather-rainy', 'weather-cloudy', 'weather-snowy', 'weather-stormy', 'weather-foggy');
             
-            // Add appropriate weather class based on conditions
             if (desc.includes('rain') || desc.includes('shower') || desc.includes('drizzle')) {
                 container.classList.add('weather-rainy');
             } else if (desc.includes('storm') || desc.includes('thunder')) {
@@ -822,7 +863,6 @@
             } else if (desc.includes('cloud') || desc.includes('overcast')) {
                 container.classList.add('weather-cloudy');
             } else {
-                // Default to cloudy
                 container.classList.add('weather-cloudy');
             }
         }
@@ -841,7 +881,6 @@
             const weatherIcon = getWeatherIcon(currentPeriod.shortForecast);
             const precipChance = extractPrecipitationChance(currentPeriod.detailedForecast);
             
-            // Set weather background with real photos
             setWeatherBackground(currentPeriod.shortForecast);
             
             let humidity = 'Getting...';
@@ -849,6 +888,15 @@
                 humidity = await getHumidityFromObservations(pointsData);
             } catch (error) {
                 humidity = 'Not available';
+            }
+            
+            // Fetch hourly forecast data
+            try {
+                const hourlyForecastData = await callNWSHourlyForecastAPI(pointsData.properties.forecastHourly);
+                displayHourlyForecast(hourlyForecastData);
+            } catch (error) {
+                console.error('Hourly forecast error:', error);
+                document.getElementById('hourly-list').innerHTML = '<div style="padding: 20px; color: #636e72; text-align: center;">Hourly forecast unavailable</div>';
             }
             
             document.getElementById('location').textContent = locationName;
