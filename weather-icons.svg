@@ -1,0 +1,74 @@
+<svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
+    
+    <symbol id="icon-sunny" viewBox="0 0 64 64">
+        <circle cx="32" cy="32" r="12" class="fill-yellow-500"/>
+        <g class="stroke-yellow-500 stroke-2 stroke-linecap-round">
+            <line x1="32" y1="6" x2="32" y2="12"/>
+            <line x1="32" y1="52" x2="32" y2="58"/>
+            <line x1="58" y1="32" x2="52" y2="32"/>
+            <line x1="12" y1="32" x2="6" y2="32"/>
+            <line x1="49.5" y1="14.5" x2="45.25" y2="18.75"/>
+            <line x1="18.75" y1="45.25" x2="14.5" y2="49.5"/>
+            <line x1="49.5" y1="49.5" x2="45.25" y2="45.25"/>
+            <line x1="18.75" y1="18.75" x2="14.5" y2="14.5"/>
+        </g>
+    </symbol>
+
+    <symbol id="icon-partly-cloudy" viewBox="0 0 64 64">
+        <g transform="translate(15, 15)">
+            <circle cx="32" cy="32" r="9" class="fill-yellow-500"/>
+             <g class="stroke-yellow-500 stroke-2 stroke-linecap-round">
+                <line x1="32" y1="14" x2="32" y2="18"/>
+                <line x1="46" y1="32" x2="42" y2="32"/>
+                <line x1="22" y1="32" x2="18" y2="32"/>
+                <line x1="42.48" y1="21.51" x2="39.65" y2="24.34"/>
+                <line x1="24.34" y1="39.65" x2="21.51" y2="42.48"/>
+            </g>
+        </g>
+        <path d="M45.5 34.5C46.88 33.12 47.5 31.19 47.5 29.25C47.5 25.5 44.5 22.5 40.75 22.5C40.43 22.5 40.12 22.53 39.82 22.58C37.88 17.3 32.98 14 27.5 14C20.19 14 14 20.19 14 27.5C14 27.76 14.02 28.01 14.05 28.26C13.73 28.18 13.4 28.12 13.06 28.12C9.55 28.12 6.62 31.05 6.62 34.56C6.62 37.44 8.56 39.88 11.28 40.6" class="fill-gray-500 dark:fill-gray-700" />
+    </symbol>
+
+    <symbol id="icon-cloudy" viewBox="0 0 64 64">
+        <path d="M45.5 34.5C46.88 33.12 47.5 31.19 47.5 29.25C47.5 25.5 44.5 22.5 40.75 22.5C40.43 22.5 40.12 22.53 39.82 22.58C37.88 17.3 32.98 14 27.5 14C20.19 14 14 20.19 14 27.5C14 27.76 14.02 28.01 14.05 28.26C13.73 28.18 13.4 28.12 13.06 28.12C9.55 28.12 6.62 31.05 6.62 34.56C6.62 37.44 8.56 39.88 11.28 40.6" class="fill-gray-600 dark:fill-gray-800" />
+        <path d="M51.97 38.03C53.19 36.81 54 35.06 54 33C54 29.69 51.31 27 48 27C47.71 27 47.43 27.03 47.15 27.08C45.38 22.23 40.94 19 35.5 19C28.86 19 23.5 24.36 23.5 31C23.5 31.24 23.52 31.48 23.55 31.72C23.26 31.65 22.98 31.6 22.69 31.6C19.55 31.6 17 34.15 17 37.29C17 39.81 18.7 41.91 21.03 42.64" class="fill-gray-500 dark:fill-gray-700" />
+    </symbol>
+
+    <symbol id="icon-rain" viewBox="0 0 64 64">
+        <path d="M45.5 34.5C46.88 33.12 47.5 31.19 47.5 29.25C47.5 25.5 44.5 22.5 40.75 22.5C40.43 22.5 40.12 22.53 39.82 22.58C37.88 17.3 32.98 14 27.5 14C20.19 14 14 20.19 14 27.5C14 27.76 14.02 28.01 14.05 28.26C13.73 28.18 13.4 28.12 13.06 28.12C9.55 28.12 6.62 31.05 6.62 34.56C6.62 37.44 8.56 39.88 11.28 40.6" class="fill-gray-500 dark:fill-gray-700" />
+        <g class="stroke-cyan-400 stroke-2 stroke-linecap-round">
+            <line x1="24" y1="44" x2="20" y2="52"/>
+            <line x1="34" y1="44" x2="30" y2="52"/>
+            <line x1="44" y1="44" x2="40" y2="52"/>
+        </g>
+    </symbol>
+
+    <symbol id="icon-thunderstorm" viewBox="0 0 64 64">
+        <path d="M45.5 34.5C46.88 33.12 47.5 31.19 47.5 29.25C47.5 25.5 44.5 22.5 40.75 22.5C40.43 22.5 40.12 22.53 39.82 22.58C37.88 17.3 32.98 14 27.5 14C20.19 14 14 20.19 14 27.5C14 27.76 14.02 28.01 14.05 28.26C13.73 28.18 13.4 28.12 13.06 28.12C9.55 28.12 6.62 31.05 6.62 34.56C6.62 37.44 8.56 39.88 11.28 40.6" class="fill-gray-700 dark:fill-gray-800" />
+        <path d="M34 40L28 48L36 48L30 56" class="stroke-yellow-400" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+    </symbol>
+
+    <symbol id="icon-snow" viewBox="0 0 64 64">
+        <path d="M45.5 34.5C46.88 33.12 47.5 31.19 47.5 29.25C47.5 25.5 44.5 22.5 40.75 22.5C40.43 22.5 40.12 22.53 39.82 22.58C37.88 17.3 32.98 14 27.5 14C20.19 14 14 20.19 14 27.5C14 27.76 14.02 28.01 14.05 28.26C13.73 28.18 13.4 28.12 13.06 28.12C9.55 28.12 6.62 31.05 6.62 34.56C6.62 37.44 8.56 39.88 11.28 40.6" class="fill-gray-500 dark:fill-gray-700" />
+        <g class="stroke-white stroke-2 stroke-linecap-round">
+           <path d="M22 49 L30 49 M26 45 L26 53" />
+           <path d="M23.17 46.17 L28.83 51.83" />
+           <path d="M28.83 46.17 L39.17 51.83" />
+           <path d="M38 46 L46 46 M42 42 L42 50" />
+           <path d="M39.17 43.17 L44.83 48.83" />
+           <path d="M44.83 43.17 L39.17 48.83" />
+        </g>
+    </symbol>
+
+    <symbol id="icon-windy" viewBox="0 0 64 64">
+        <path d="M12 26 C 22 18, 42 18, 52 26" class="stroke-gray-400 dark:stroke-gray-500" stroke-width="4" stroke-linecap="round"/>
+        <path d="M18 36 C 10 44, 34 44, 46 36" class="stroke-gray-400 dark:stroke-gray-500" stroke-width="4" stroke-linecap="round"/>
+        <path d="M12 46 C 22 54, 42 54, 52 46" class="stroke-gray-400 dark:stroke-gray-500" stroke-width="4" stroke-linecap="round"/>
+    </symbol>
+
+    <symbol id="icon-fog" viewBox="0 0 64 64">
+        <path d="M12 26c4-4 12-4 16 0s12 4 16 0 12-4 16 0" class="stroke-gray-400 dark:stroke-gray-600" stroke-width="4" stroke-linecap="round"/>
+        <path d="M12 38c4 4 12 4 16 0s12-4 16 0 12 4 16 0" class="stroke-gray-400 dark:stroke-gray-600" stroke-width="4" stroke-linecap="round"/>
+        <path d="M12 50c4-4 12-4 16 0s12 4 16 0 12-4 16 0" class="stroke-gray-400 dark:stroke-gray-600" stroke-width="4" stroke-linecap="round"/>
+    </symbol>
+
+</svg>
