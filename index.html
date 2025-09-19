@@ -4,6 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Gene's Weather Report</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Exo+2:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
         * {
             margin: 0;
@@ -12,7 +15,7 @@
         }
 
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-family: 'Exo 2', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             background: linear-gradient(135deg, #74b9ff 0%, #0984e3 100%);
             min-height: 100vh;
             display: flex;
@@ -128,20 +131,14 @@
             background-color: #BDC3C7;
         }
 
-        /* Weather emoji overlays */
+        /* Weather emoji overlays - NO ANIMATIONS */
         .test-container-1.weather-sunny::before {
             content: '☀️';
             position: absolute;
             top: 10px;
             right: 15px;
             font-size: 2em;
-            animation: sunshine 3s ease-in-out infinite;
             filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.5));
-        }
-
-        @keyframes sunshine {
-            0%, 100% { transform: scale(1) rotate(0deg); }
-            50% { transform: scale(1.1) rotate(180deg); }
         }
 
         .test-container-1.weather-cloudy::before {
@@ -152,13 +149,7 @@
             right: 0;
             font-size: 2em;
             text-align: center;
-            animation: cloudFloat 4s ease-in-out infinite;
             filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.5));
-        }
-
-        @keyframes cloudFloat {
-            0%, 100% { transform: translateX(0px); }
-            50% { transform: translateX(10px); }
         }
 
         .test-container-1.weather-stormy::before {
@@ -169,13 +160,7 @@
             right: 0;
             font-size: 1.8em;
             text-align: center;
-            animation: lightning 1.5s ease-in-out infinite;
             filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.5));
-        }
-
-        @keyframes lightning {
-            0%, 80%, 100% { opacity: 1; }
-            40% { opacity: 0.3; }
         }
 
         .test-container-1.weather-foggy::before {
@@ -185,13 +170,7 @@
             left: 50%;
             transform: translate(-50%, -50%);
             font-size: 3em;
-            animation: foggy 4s ease-in-out infinite;
             filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.5));
-        }
-
-        @keyframes foggy {
-            0%, 100% { opacity: 0.6; transform: translate(-50%, -50%) scale(1); }
-            50% { opacity: 0.9; transform: translate(-50%, -50%) scale(1.1); }
         }
 
         .test-container-1 > * {
@@ -777,7 +756,7 @@
             });
         }
 
-        async function getHumidityFromObservations(pointsData) {
+        async function getCurrentWeatherObservations(pointsData) {
             try {
                 const stationsUrl = pointsData.properties.observationStations;
                 const stationsResponse = await fetch(stationsUrl, {
@@ -793,6 +772,7 @@
                     throw new Error('No weather stations found');
                 }
                 
+                // Try multiple stations to get current observations
                 for (let i = 0; i < Math.min(3, stationsData.features.length); i++) {
                     try {
                         const stationId = stationsData.features[i].properties.stationIdentifier;
@@ -806,18 +786,36 @@
                         if (obsResponse.ok) {
                             const obsData = await obsResponse.json();
                             const props = obsData.properties;
-                            if (props.relativeHumidity && props.relativeHumidity.value !== null) {
-                                return `${Math.round(props.relativeHumidity.value)}%`;
-                            }
+                            
+                            // Return current weather data
+                            return {
+                                temperature: props.temperature.value ? Math.round(props.temperature.value * 9/5 + 32) : null, // Convert C to F
+                                temperatureUnit: 'F',
+                                humidity: props.relativeHumidity && props.relativeHumidity.value !== null ? 
+                                         `${Math.round(props.relativeHumidity.value)}%` : 'Not available',
+                                windSpeed: props.windSpeed && props.windSpeed.value !== null ? 
+                                          `${Math.round(props.windSpeed.value * 2.237)} mph` : 'Not available', // Convert m/s to mph
+                                windDirection: props.windDirection && props.windDirection.value !== null ? 
+                                             getWindDirection(props.windDirection.value) : '',
+                                conditions: props.textDescription || 'Current conditions',
+                                timestamp: props.timestamp
+                            };
                         }
                     } catch (stationError) {
                         continue;
                     }
                 }
-                throw new Error('No humidity data available from any station');
+                throw new Error('No current weather data available from any station');
             } catch (error) {
-                return 'Not available';
+                return null;
             }
+        }
+
+        function getWindDirection(degrees) {
+            const directions = ['N', 'NNE', 'NE', 'ENE', 'E', 'ESE', 'SE', 'SSE', 
+                              'S', 'SSW', 'SW', 'WSW', 'W', 'WNW', 'NW', 'NNW'];
+            const index = Math.round(degrees / 22.5) % 16;
+            return directions[index];
         }
 
         function displaySevenDayForecast(periods) {
@@ -896,16 +894,66 @@
                 locationName = `${relativeLocation.city}, US`;
             }
             
-            const weatherIcon = getWeatherIcon(currentPeriod.shortForecast);
+            // Get current weather observations for real-time data
+            const currentWeather = await getCurrentWeatherObservations(pointsData);
+            
+            // Use current weather if available, otherwise fall back to forecast
+            const displayTemperature = currentWeather?.temperature || currentPeriod.temperature;
+            const displayTempUnit = currentWeather?.temperatureUnit || currentPeriod.temperatureUnit;
+            const displayConditions = currentWeather?.conditions || currentPeriod.shortForecast;
+            const displayWind = currentWeather ? 
+                `${currentWeather.windSpeed} ${currentWeather.windDirection}` : 
+                `${currentPeriod.windSpeed} ${currentPeriod.windDirection}`;
+            const displayHumidity = currentWeather?.humidity || 'Getting...';
+            
+            const weatherIcon = getWeatherIcon(displayConditions);
             const precipChance = extractPrecipitationChance(currentPeriod.detailedForecast);
             
+            // Use forecast conditions for background (since current observations may not have detailed conditions)
             setWeatherBackground(currentPeriod.shortForecast);
             
-            let humidity = 'Getting...';
-            try {
-                humidity = await getHumidityFromObservations(pointsData);
-            } catch (error) {
-                humidity = 'Not available';
+            // Get humidity from observations if current weather didn't provide it
+            let humidity = displayHumidity;
+            if (!currentWeather || humidity === 'Getting...') {
+                try {
+                    // Use the old function as fallback
+                    const stationsUrl = pointsData.properties.observationStations;
+                    const stationsResponse = await fetch(stationsUrl, {
+                        headers: {
+                            'Accept': 'application/geo+json',
+                            'User-Agent': '(GenesWeatherApp, contact@example.com)'
+                        }
+                    });
+                    if (stationsResponse.ok) {
+                        const stationsData = await stationsResponse.json();
+                        if (stationsData.features && stationsData.features.length > 0) {
+                            for (let i = 0; i < Math.min(3, stationsData.features.length); i++) {
+                                try {
+                                    const stationId = stationsData.features[i].properties.stationIdentifier;
+                                    const observationUrl = `https://api.weather.gov/stations/${stationId}/observations/latest`;
+                                    const obsResponse = await fetch(observationUrl, {
+                                        headers: {
+                                            'Accept': 'application/geo+json',
+                                            'User-Agent': '(GenesWeatherApp, contact@example.com)'
+                                        }
+                                    });
+                                    if (obsResponse.ok) {
+                                        const obsData = await obsResponse.json();
+                                        const props = obsData.properties;
+                                        if (props.relativeHumidity && props.relativeHumidity.value !== null) {
+                                            humidity = `${Math.round(props.relativeHumidity.value)}%`;
+                                            break;
+                                        }
+                                    }
+                                } catch (stationError) {
+                                    continue;
+                                }
+                            }
+                        }
+                    }
+                } catch (error) {
+                    humidity = 'Not available';
+                }
             }
             
             // Fetch hourly forecast data
@@ -917,12 +965,13 @@
                 document.getElementById('hourly-carousel').innerHTML = '<div style="padding: 20px; color: #636e72; text-align: center; font-size: 14px;">Hourly forecast unavailable</div>';
             }
             
+            // Display current weather data
             document.getElementById('location').textContent = locationName;
             document.getElementById('weather-icon').textContent = weatherIcon;
-            document.getElementById('temperature').textContent = `${currentPeriod.temperature}°${currentPeriod.temperatureUnit}`;
-            document.getElementById('conditions').textContent = currentPeriod.shortForecast;
-            document.getElementById('temp-unit').textContent = `${currentPeriod.temperature}°${currentPeriod.temperatureUnit}`;
-            document.getElementById('wind').textContent = currentPeriod.windSpeed + ' ' + currentPeriod.windDirection;
+            document.getElementById('temperature').textContent = `${displayTemperature}°${displayTempUnit}`;
+            document.getElementById('conditions').textContent = displayConditions;
+            document.getElementById('temp-unit').textContent = `${displayTemperature}°${displayTempUnit}`;
+            document.getElementById('wind').textContent = displayWind;
             document.getElementById('humidity').textContent = humidity;
             document.getElementById('precipitation').textContent = precipChance;
             document.getElementById('coordinates').textContent = `${lat.toFixed(4)}, ${lon.toFixed(4)}`;
