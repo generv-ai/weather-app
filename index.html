@@ -72,41 +72,73 @@
             overflow: hidden;
         }
 
-        /* Weather backgrounds */
+        /* Weather backgrounds with custom images and adjusted text colors */
         .test-container-1.weather-sunny {
-            background: linear-gradient(rgba(0, 0, 0, 0.15), rgba(0, 0, 0, 0.15)), 
-                        url('https://images.unsplash.com/photo-1465146344425-f00d5f5c8f07?auto=format&fit=crop&q=80');
+            background: linear-gradient(rgba(0, 0, 0, 0.1), rgba(0, 0, 0, 0.1)), 
+                        url('https://raw.githubusercontent.com/generv-ai/weather-app/main/public/images/sunny%20with%20white%20background.jpg');
             background-size: cover;
             background-position: center;
             background-repeat: no-repeat;
             background-color: #87CEEB;
+            color: #2d3436; /* Dark text for bright background */
+        }
+
+        .test-container-1.weather-sunny > * {
+            position: relative;
+            z-index: 2;
+            text-shadow: 0 1px 2px rgba(255, 255, 255, 0.8);
+            color: #2d3436; /* Dark text for bright background */
         }
 
         .test-container-1.weather-rainy {
             background: linear-gradient(rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.3)), 
-                        url('https://images.unsplash.com/photo-1519692933481-e162a57d6721?auto=format&fit=crop&q=80');
+                        url('https://raw.githubusercontent.com/generv-ai/weather-app/main/public/images/Rainy_G.png');
             background-size: cover;
             background-position: center;
             background-repeat: no-repeat;
             background-color: #2C3E50;
+            color: white;
+        }
+
+        .test-container-1.weather-rainy > * {
+            position: relative;
+            z-index: 2;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.8);
+            color: white;
         }
 
         .test-container-1.weather-cloudy {
             background: linear-gradient(rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.2)), 
-                        url('https://images.unsplash.com/photo-1534088568595-a066f410bcda?auto=format&fit=crop&q=80');
+                        url('https://raw.githubusercontent.com/generv-ai/weather-app/main/public/images/Cloudy_G.png');
             background-size: cover;
             background-position: center;
             background-repeat: no-repeat;
             background-color: #95A5A6;
+            color: white;
+        }
+
+        .test-container-1.weather-cloudy > * {
+            position: relative;
+            z-index: 2;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.7);
+            color: white;
         }
 
         .test-container-1.weather-snowy {
             background: linear-gradient(rgba(0, 0, 0, 0.1), rgba(0, 0, 0, 0.1)), 
-                        url('https://images.unsplash.com/photo-1517299321609-52687d1bc55a?auto=format&fit=crop&q=80');
+                        url('https://raw.githubusercontent.com/generv-ai/weather-app/main/public/images/Snowy_G.png');
             background-size: cover;
             background-position: center;
             background-repeat: no-repeat;
             background-color: #E8F4FD;
+            color: #2d3436;
+        }
+
+        .test-container-1.weather-snowy > * {
+            position: relative;
+            z-index: 2;
+            text-shadow: 0 1px 3px rgba(0, 0, 0, 0.6);
+            color: #2d3436;
         }
 
         .test-container-1.weather-snowy::before {
@@ -115,30 +147,46 @@
 
         .test-container-1.weather-stormy {
             background: linear-gradient(rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.3)), 
-                        url('https://images.unsplash.com/photo-1605727216801-e27ce1d0cc28?auto=format&fit=crop&q=80');
+                        url('https://github.com/generv-ai/weather-app/blob/main/public/images/Stormy.png');
             background-size: cover;
             background-position: center;
             background-repeat: no-repeat;
             background-color: #2C3E50;
+            color: white;
+        }
+
+        .test-container-1.weather-stormy > * {
+            position: relative;
+            z-index: 2;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.8);
+            color: white;
         }
 
         .test-container-1.weather-foggy {
             background: linear-gradient(rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.2)), 
-                        url('https://images.unsplash.com/photo-1487621167305-5d248087c724?auto=format&fit=crop&q=80');
+                        url('https://raw.githubusercontent.com/generv-ai/weather-app/main/public/images/Foggy_G.png');
             background-size: cover;
             background-position: center;
             background-repeat: no-repeat;
             background-color: #BDC3C7;
+            color: white;
         }
 
-        /* Weather emoji overlays - NO ANIMATIONS */
+        .test-container-1.weather-foggy > * {
+            position: relative;
+            z-index: 2;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.7);
+            color: white;
+        }
+
+        /* Weather emoji overlays - NO ANIMATIONS, adjusted for backgrounds */
         .test-container-1.weather-sunny::before {
             content: '☀️';
             position: absolute;
             top: 10px;
             right: 15px;
             font-size: 2em;
-            filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.5));
+            filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.3));
         }
 
         .test-container-1.weather-cloudy::before {
@@ -545,6 +593,20 @@
                 <!-- Hourly forecast will be populated here -->
             </div>
         </div>
+
+        <!-- WEATHER BACKGROUND TEST BUTTONS -->
+        <div style="background: rgba(255, 193, 7, 0.1); border: 2px solid #ffc107; border-radius: 10px; padding: 12px; margin: 10px 0;">
+            <h3 style="color: #e17055; margin: 0 0 8px 0; font-size: 1em; font-weight: 600;">🧪 Test Weather Backgrounds</h3>
+            <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px;">
+                <button onclick="testWeatherCondition('sunny')" style="background: #ffa502; color: white; border: none; padding: 8px 12px; border-radius: 6px; cursor: pointer; font-size: 11px; font-weight: 600;">☀️ Sunny</button>
+                <button onclick="testWeatherCondition('rainy')" style="background: #3742fa; color: white; border: none; padding: 8px 12px; border-radius: 6px; cursor: pointer; font-size: 11px; font-weight: 600;">🌧️ Rainy</button>
+                <button onclick="testWeatherCondition('cloudy')" style="background: #747d8c; color: white; border: none; padding: 8px 12px; border-radius: 6px; cursor: pointer; font-size: 11px; font-weight: 600;">☁️ Cloudy</button>
+                <button onclick="testWeatherCondition('snowy')" style="background: #7bed9f; color: #2d3436; border: none; padding: 8px 12px; border-radius: 6px; cursor: pointer; font-size: 11px; font-weight: 600;">❄️ Snowy</button>
+                <button onclick="testWeatherCondition('stormy')" style="background: #2c2c54; color: white; border: none; padding: 8px 12px; border-radius: 6px; cursor: pointer; font-size: 11px; font-weight: 600;">⛈️ Stormy</button>
+                <button onclick="testWeatherCondition('foggy')" style="background: #a4b0be; color: white; border: none; padding: 8px 12px; border-radius: 6px; cursor: pointer; font-size: 11px; font-weight: 600;">🌫️ Foggy</button>
+            </div>
+            <button onclick="resetToRealWeather()" style="background: #00b894; color: white; border: none; padding: 8px 16px; border-radius: 6px; cursor: pointer; font-size: 11px; font-weight: 600; margin-top: 8px; width: 100%;">🔄 Reset to Real Weather</button>
+        </div>
         
         <div class="test-container-3">
             <div class="detailed-forecast">
@@ -838,6 +900,40 @@
                               'S', 'SSW', 'SW', 'WSW', 'W', 'WNW', 'NW', 'NNW'];
             const index = Math.round(degrees / 22.5) % 16;
             return directions[index];
+        }
+
+        // Test functions for weather background switching
+        function testWeatherCondition(weatherType) {
+            const container = document.querySelector('.test-container-1');
+            
+            // Remove all weather classes
+            container.classList.remove('weather-sunny', 'weather-rainy', 'weather-cloudy', 'weather-snowy', 'weather-stormy', 'weather-foggy');
+            
+            // Add the test weather class
+            container.classList.add(`weather-${weatherType}`);
+            
+            // Update the display text and icon if weather info is showing
+            if (document.getElementById('weather-info').classList.contains('show')) {
+                const testConditions = {
+                    'sunny': { condition: 'Testing Sunny Background', icon: '☀️', temp: '78' },
+                    'rainy': { condition: 'Testing Rainy Background', icon: '🌧️', temp: '65' },
+                    'cloudy': { condition: 'Testing Cloudy Background', icon: '☁️', temp: '72' },
+                    'snowy': { condition: 'Testing Snowy Background', icon: '❄️', temp: '28' },
+                    'stormy': { condition: 'Testing Stormy Background', icon: '⛈️', temp: '62' },
+                    'foggy': { condition: 'Testing Foggy Background', icon: '🌫️', temp: '55' }
+                };
+                
+                const testData = testConditions[weatherType];
+                document.getElementById('conditions').textContent = testData.condition;
+                document.getElementById('weather-icon').textContent = testData.icon;
+                document.getElementById('temperature').textContent = `${testData.temp}°F`;
+                document.getElementById('temp-unit').textContent = `${testData.temp}°F`;
+            }
+        }
+
+        function resetToRealWeather() {
+            // Refresh the entire weather data
+            getWeatherData();
         }
 
         function displaySevenDayForecast(periods) {
