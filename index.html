@@ -613,7 +613,7 @@
             if (text.includes('possible')) return 'Possible (30-50%)';
             if (text.includes('slight chance')) return 'Slight (20-30%)';
             if (text.includes('isolated')) return 'Isolated (10-20%)';
-            return 'Not specified';
+            return '-';
         }
 
         function getDayName(dateStr, index) {
@@ -759,54 +759,76 @@
         async function getCurrentWeatherObservations(pointsData) {
             try {
                 const stationsUrl = pointsData.properties.observationStations;
+                console.log('Fetching stations from:', stationsUrl);
+                
                 const stationsResponse = await fetch(stationsUrl, {
                     headers: {
                         'Accept': 'application/geo+json',
                         'User-Agent': '(GenesWeatherApp, contact@example.com)'
                     }
                 });
-                if (!stationsResponse.ok) throw new Error(`Stations API failed: ${stationsResponse.status}`);
                 
-                const stationsData = await stationsResponse.json();
-                if (!stationsData.features || stationsData.features.length === 0) {
-                    throw new Error('No weather stations found');
+                if (!stationsResponse.ok) {
+                    console.log('Stations API failed:', stationsResponse.status);
+                    return null;
                 }
                 
-                // Try multiple stations to get current observations
+                const stationsData = await stationsResponse.json();
+                console.log('Found stations:', stationsData.features?.length);
+                
+                if (!stationsData.features || stationsData.features.length === 0) {
+                    console.log('No weather stations found');
+                    return null;
+                }
+                
+                // Try first 3 stations
                 for (let i = 0; i < Math.min(3, stationsData.features.length); i++) {
                     try {
                         const stationId = stationsData.features[i].properties.stationIdentifier;
                         const observationUrl = `https://api.weather.gov/stations/${stationId}/observations/latest`;
+                        console.log(`Trying station ${i + 1}:`, stationId);
+                        
                         const obsResponse = await fetch(observationUrl, {
                             headers: {
                                 'Accept': 'application/geo+json',
                                 'User-Agent': '(GenesWeatherApp, contact@example.com)'
                             }
                         });
+                        
                         if (obsResponse.ok) {
                             const obsData = await obsResponse.json();
                             const props = obsData.properties;
+                            console.log('Current observations:', props);
                             
-                            // Return current weather data
-                            return {
-                                temperature: props.temperature.value ? Math.round(props.temperature.value * 9/5 + 32) : null, // Convert C to F
-                                temperatureUnit: 'F',
-                                humidity: props.relativeHumidity && props.relativeHumidity.value !== null ? 
-                                         `${Math.round(props.relativeHumidity.value)}%` : 'Not available',
-                                windSpeed: props.windSpeed && props.windSpeed.value !== null ? 
-                                          `${Math.round(props.windSpeed.value * 2.237)} mph` : 'Not available', // Convert m/s to mph
-                                windDirection: props.windDirection && props.windDirection.value !== null ? 
-                                             getWindDirection(props.windDirection.value) : '',
-                                conditions: props.textDescription || 'Current conditions',
-                                timestamp: props.timestamp
-                            };
+                            // Check if we have temperature data
+                            if (props.temperature && props.temperature.value !== null) {
+                                const tempF = Math.round(props.temperature.value * 9/5 + 32);
+                                console.log('Found current temperature:', tempF);
+                                
+                                return {
+                                    temperature: tempF,
+                                    temperatureUnit: 'F',
+                                    humidity: props.relativeHumidity && props.relativeHumidity.value !== null ? 
+                                             `${Math.round(props.relativeHumidity.value)}%` : null,
+                                    windSpeed: props.windSpeed && props.windSpeed.value !== null ? 
+                                              Math.round(props.windSpeed.value * 2.237) : null, // Convert m/s to mph
+                                    windDirection: props.windDirection && props.windDirection.value !== null ? 
+                                                 getWindDirection(props.windDirection.value) : null,
+                                    conditions: props.textDescription || null,
+                                    timestamp: props.timestamp
+                                };
+                            }
                         }
                     } catch (stationError) {
+                        console.log(`Station ${i + 1} error:`, stationError);
                         continue;
                     }
                 }
-                throw new Error('No current weather data available from any station');
+                
+                console.log('No current observations found from any station');
+                return null;
             } catch (error) {
+                console.log('Observations API error:', error);
                 return null;
             }
         }
@@ -894,66 +916,35 @@
                 locationName = `${relativeLocation.city}, US`;
             }
             
-            // Get current weather observations for real-time data
+            console.log('Getting current weather observations...');
             const currentWeather = await getCurrentWeatherObservations(pointsData);
+            console.log('Current weather result:', currentWeather);
             
-            // Use current weather if available, otherwise fall back to forecast
+            // Determine what data to display
             const displayTemperature = currentWeather?.temperature || currentPeriod.temperature;
             const displayTempUnit = currentWeather?.temperatureUnit || currentPeriod.temperatureUnit;
             const displayConditions = currentWeather?.conditions || currentPeriod.shortForecast;
-            const displayWind = currentWeather ? 
-                `${currentWeather.windSpeed} ${currentWeather.windDirection}` : 
-                `${currentPeriod.windSpeed} ${currentPeriod.windDirection}`;
-            const displayHumidity = currentWeather?.humidity || 'Getting...';
+            
+            // Wind handling
+            let displayWind;
+            if (currentWeather?.windSpeed && currentWeather?.windDirection) {
+                displayWind = `${currentWeather.windSpeed} mph ${currentWeather.windDirection}`;
+            } else {
+                displayWind = `${currentPeriod.windSpeed} ${currentPeriod.windDirection}`;
+            }
+            
+            // Humidity handling
+            let displayHumidity = currentWeather?.humidity || 'Getting...';
             
             const weatherIcon = getWeatherIcon(displayConditions);
             const precipChance = extractPrecipitationChance(currentPeriod.detailedForecast);
             
-            // Use forecast conditions for background (since current observations may not have detailed conditions)
+            // Use forecast conditions for background
             setWeatherBackground(currentPeriod.shortForecast);
             
-            // Get humidity from observations if current weather didn't provide it
-            let humidity = displayHumidity;
-            if (!currentWeather || humidity === 'Getting...') {
-                try {
-                    // Use the old function as fallback
-                    const stationsUrl = pointsData.properties.observationStations;
-                    const stationsResponse = await fetch(stationsUrl, {
-                        headers: {
-                            'Accept': 'application/geo+json',
-                            'User-Agent': '(GenesWeatherApp, contact@example.com)'
-                        }
-                    });
-                    if (stationsResponse.ok) {
-                        const stationsData = await stationsResponse.json();
-                        if (stationsData.features && stationsData.features.length > 0) {
-                            for (let i = 0; i < Math.min(3, stationsData.features.length); i++) {
-                                try {
-                                    const stationId = stationsData.features[i].properties.stationIdentifier;
-                                    const observationUrl = `https://api.weather.gov/stations/${stationId}/observations/latest`;
-                                    const obsResponse = await fetch(observationUrl, {
-                                        headers: {
-                                            'Accept': 'application/geo+json',
-                                            'User-Agent': '(GenesWeatherApp, contact@example.com)'
-                                        }
-                                    });
-                                    if (obsResponse.ok) {
-                                        const obsData = await obsResponse.json();
-                                        const props = obsData.properties;
-                                        if (props.relativeHumidity && props.relativeHumidity.value !== null) {
-                                            humidity = `${Math.round(props.relativeHumidity.value)}%`;
-                                            break;
-                                        }
-                                    }
-                                } catch (stationError) {
-                                    continue;
-                                }
-                            }
-                        }
-                    }
-                } catch (error) {
-                    humidity = 'Not available';
-                }
+            // If we don't have humidity from current observations, try the stations API directly
+            if (displayHumidity === 'Getting...' || displayHumidity === null) {
+                displayHumidity = 'Not available';
             }
             
             // Fetch hourly forecast data
@@ -965,14 +956,14 @@
                 document.getElementById('hourly-carousel').innerHTML = '<div style="padding: 20px; color: #636e72; text-align: center; font-size: 14px;">Hourly forecast unavailable</div>';
             }
             
-            // Display current weather data
+            // Display the data
             document.getElementById('location').textContent = locationName;
             document.getElementById('weather-icon').textContent = weatherIcon;
             document.getElementById('temperature').textContent = `${displayTemperature}°${displayTempUnit}`;
             document.getElementById('conditions').textContent = displayConditions;
             document.getElementById('temp-unit').textContent = `${displayTemperature}°${displayTempUnit}`;
             document.getElementById('wind').textContent = displayWind;
-            document.getElementById('humidity').textContent = humidity;
+            document.getElementById('humidity').textContent = displayHumidity;
             document.getElementById('precipitation').textContent = precipChance;
             document.getElementById('coordinates').textContent = `${lat.toFixed(4)}, ${lon.toFixed(4)}`;
             document.getElementById('detailed-forecast-text').textContent = currentPeriod.detailedForecast;
